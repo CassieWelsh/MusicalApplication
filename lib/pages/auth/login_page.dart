@@ -78,7 +78,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
 
-              const SizedBox(height: 25),
+              const SizedBox(height: 50),
 
               MyTextField(
                 controller: emailController,
@@ -115,6 +115,7 @@ class _LoginPageState extends State<LoginPage> {
               // sign in button
               MyButton(
                 text: 'Sign In',
+                color: Colors.red,
                 onTap: signUserIn,
               ),
 
@@ -123,6 +124,7 @@ class _LoginPageState extends State<LoginPage> {
               MyButton(
                 text: 'Register',
                 onTap: openRegisterPage,
+                color: Colors.red,
               ),
 
               // const SizedBox(height: 50),
@@ -154,43 +156,6 @@ class _LoginPageState extends State<LoginPage> {
               //     ],
               //   ),
               // ),
-
-              //const SizedBox(height: 50),
-
-              // google + apple sign in buttons
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // google button
-                  //SquareTile(imagePath: 'lib/images/google.png'),
-
-                  SizedBox(width: 25),
-
-                  // apple button
-                  //SquareTile(imagePath: 'lib/images/apple.png')
-                ],
-              ),
-
-              const SizedBox(height: 50),
-
-              // not a member? register now
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Not a member?',
-                    style: TextStyle(color: Colors.grey[700]),
-                  ),
-                  const SizedBox(width: 4),
-                  const Text(
-                    'Register now',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              )
             ],
           ),
         ),

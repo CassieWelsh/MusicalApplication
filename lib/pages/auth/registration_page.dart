@@ -35,12 +35,17 @@ class _RegistrationPageState extends State<RegistrationPage> {
     }
 
     try {
+      setState(() {
+        message = "Loading";
+      });
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
               email: emailController.text,
               password: passwordController.text);
-      setState(() {
-        message = "Successful😊";
+      Future.delayed(const Duration(milliseconds: 500), () {
+        setState(() {
+          message = "Successful😊";
+        });
       });
     } on FirebaseAuthException catch (e) {
       setState(() {
@@ -88,7 +93,15 @@ class _RegistrationPageState extends State<RegistrationPage> {
               const SizedBox(height: 25),
               MyButton(
                 onTap: register,
+                color: Colors.red,
                 text: "Register",
+              ),
+              const SizedBox(height: 10),
+
+              MyButton(
+                text: 'Go Back',
+                color: Colors.green,
+                onTap: () => Navigator.pop(context),
               ),
               const SizedBox(height: 100),
             ],

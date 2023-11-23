@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:musical_application/pages/home.dart';
 
 class App extends StatefulWidget {
   const App({super.key});
@@ -11,15 +13,12 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   int _currentIndex = 1;
 
-  late final User? user;
-
   late final List<Widget> tabs;
 
   _AppState() {
-    user = FirebaseAuth.instance.currentUser;
     tabs = [
-      const Center(child: Text('Home')),
-      Center(child: Text(user?.email ?? '12')),
+      HomePage(),
+      const Center(child: Text('12')),
     ];
   }
 
@@ -51,7 +50,7 @@ class _AppState extends State<App> {
               icon: Icon(Icons.home),
               activeIcon: Icon(Icons.home),
               label: "Home",
-              backgroundColor: Colors.green,
+              backgroundColor: Colors.red,
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.account_circle_outlined),

@@ -37,6 +37,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_auth: ^4.14.0
   firebase_core: ^2.22.0
+  cloud_firestore: ^4.13.1
+  flutter_launcher_icons: "^0.13.1"
 
 dev_dependencies:
   flutter_test:
@@ -49,8 +51,13 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
 
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
+  # For information on the generic Dart part of this file, see the
+  # following page: https://dart.dev/tools/pub/pubspec
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "resources/icon.png"
 
 # The following section is specific to Flutter packages.
 flutter:
