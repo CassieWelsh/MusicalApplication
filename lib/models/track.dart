@@ -1,13 +1,32 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Track {
-  int trackId;
-  String userId;
-  GenreTypes genre;
-  String name;
-  String? artist;
-  String songPath;
+  final String? id;
+  final String artistId;
+  final String name;
+  final int genre;
+  final String songPath;
 
-  Track(this.trackId, this.userId, this.genre, this.name, this.artist,
-      this.songPath);
+  Track({
+    this.id,
+    required this.artistId,
+    required this.name,
+    required this.genre,
+    required this.songPath,
+  });
+
+  factory Track.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document) {
+    final data = document.data();
+    if (data == null) {
+      throw Exception();
+    }
+
+    return Track(
+      id: document.id,
+      artistId: data["artistId"],
+      name: data["name"],
+      genre: data["genre"],
+      songPath: data["songPath"],
+    );
+  }
 }
-
-enum GenreTypes { metal }
