@@ -1,10 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:musical_application/data_provider.dart';
 import 'package:musical_application/models/dto/trackartist.dart';
-import 'package:musical_application/repositories/track_repository.dart';
-
-import '../models/track.dart';
 
 class HomePage extends StatelessWidget {
   final _dataProvider = DataProvider();

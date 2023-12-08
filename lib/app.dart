@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:musical_application/components/audioplayer.dart';
 import 'package:musical_application/pages/home.dart';
 
 class App extends StatefulWidget {
@@ -11,14 +12,15 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  int _currentIndex = 1;
+  int _currentIndex = 0;
 
   late final List<Widget> tabs;
 
   _AppState() {
     tabs = [
       HomePage(),
-      const Center(child: Text('12')),
+      const Player(url: 'https://firebasestorage.googleapis.com/v0/b/music-service-1bdb3.appspot.com/o/rubeji.mp3?alt=media&token=2ff6b286-bbfa-47d6-9156-cf1c98ffa712'),
+      //const Center(child: Text('12')),
     ];
   }
 
