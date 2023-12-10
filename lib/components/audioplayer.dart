@@ -3,42 +3,37 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 class Player extends StatefulWidget {
-  final String url;
   final AudioPlayer player;
 
-  const Player({super.key, required this.url, required this.player});
+  const Player({super.key, required this.player});
 
   @override
-  State<Player> createState() => _PlayerState(url: url, player: player);
+  State<Player> createState() => _PlayerState(player: player);
 }
 
 class _PlayerState extends State<Player> {
-  _PlayerState({required this.url, required this.player}) {
+  _PlayerState({required this.player}) {
     isPlaying = player.state == PlayerState.playing;
   }
 
+  final storage = FirebaseStorage.instance.ref();
   final AudioPlayer player;
   late bool isPlaying;
-  Duration duration = const Duration(hours: 2);
+  static Duration duration = const Duration(hours: 2);
   Duration position = Duration.zero;
-  final String url;
-  final storage = FirebaseStorage.instance.ref();
 
   void setAudio() async {
     if (!mounted) {
       return;
     }
 
-    if (url.isNotEmpty) {
-      final mountainsRef = await storage.child(url).getDownloadURL();
-      await player.setSourceUrl(mountainsRef);
+    if (player.state != PlayerState.stopped) {
       final pDuration = await player.getDuration();
       duration = pDuration ?? const Duration(hours: 99);
       return;
     }
 
     duration = const Duration(hours: 99);
-    //await player.resume();
   }
 
   @override

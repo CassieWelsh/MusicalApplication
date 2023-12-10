@@ -17,13 +17,11 @@ class _AppState extends State<App> {
   late final List<Widget> tabs;
   final AudioPlayer player = AudioPlayer();
   final storage = FirebaseStorage.instance.ref();
-  String url = '';
 
   _AppState() {
     tabs = [
       HomePage(changeSong: changeSong),
       Player(
-        url: url,
         player: player,
       ),
       const Center(child: Text('12')),
@@ -32,11 +30,7 @@ class _AppState extends State<App> {
 
   void changeSong(String songName) async {
     final mountainsRef = await storage.child(songName).getDownloadURL();
-    await player.pause();
     await player.play(UrlSource(mountainsRef));
-    setState(() {
-      url = songName;
-    });
   }
 
   void signUserOut() {
