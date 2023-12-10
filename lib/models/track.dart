@@ -6,6 +6,7 @@ class Track {
   final String name;
   final int genre;
   final String songPath;
+  final bool isPublished;
 
   Track({
     this.id,
@@ -13,6 +14,7 @@ class Track {
     required this.name,
     required this.genre,
     required this.songPath,
+    required this.isPublished,
   });
 
   factory Track.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document) {
@@ -27,6 +29,7 @@ class Track {
       name: data["name"],
       genre: data["genre"],
       songPath: data["songPath"],
+      isPublished: data["isPublished"],
     );
   }
 }

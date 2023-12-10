@@ -1,18 +1,19 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:musical_application/data_provider.dart';
 
-class Player extends StatefulWidget {
+class PlayerPage extends StatefulWidget {
   final AudioPlayer player;
 
-  const Player({super.key, required this.player});
+  PlayerPage({super.key, required this.player});
 
   @override
-  State<Player> createState() => _PlayerState(player: player);
+  State<PlayerPage> createState() => _PlayerPageState(player: player);
 }
 
-class _PlayerState extends State<Player> {
-  _PlayerState({required this.player}) {
+class _PlayerPageState extends State<PlayerPage> {
+  _PlayerPageState({required this.player}) {
     isPlaying = player.state == PlayerState.playing;
   }
 

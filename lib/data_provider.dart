@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:musical_application/models/dto/trackartist.dart';
 import 'package:musical_application/repositories/artist_repository.dart';
 import 'package:musical_application/repositories/track_repository.dart';
+
+import 'models/artist.dart';
 
 class DataProvider {
   final _trackRepository = TrackRepository();
@@ -16,5 +19,9 @@ class DataProvider {
         artistName: artists[t.artistId]?.name ?? 'Unknown',
         path: t.songPath)
     ).toList();
+  }
+
+  Future<Artist?> getCurrentArtist() {
+    return _artistRepository.getCurrentArtist();
   }
 }
