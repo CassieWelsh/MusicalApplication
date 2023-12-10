@@ -19,4 +19,12 @@ class Artist {
         bio: data["bio"]
     );
   }
+
+  Map<String, dynamic> toFirestore() {
+    return {
+      "userId": userId,
+      "name": name,
+      if (bio != null) "bio": bio,
+    };
+  }
 }

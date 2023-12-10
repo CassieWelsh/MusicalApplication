@@ -1,7 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:musical_application/components/my_button.dart';
 import 'package:musical_application/components/my_textfield.dart';
+import 'package:musical_application/utils/collection_names.dart';
+
+import '../../models/artist.dart';
 
 class RegistrationPage extends StatefulWidget {
   RegistrationPage({super.key});
@@ -11,6 +16,7 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
+  final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final repeatPasswordController = TextEditingController();
@@ -20,7 +26,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
   void register() async {
     if (emailController.text.isEmpty
         || passwordController.text.isEmpty
-        || repeatPasswordController.text.isEmpty){
+        || repeatPasswordController.text.isEmpty
+        || nameController.text.isEmpty){
       setState(() {
         message = "Fill all fields";
       });
@@ -42,6 +49,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
           .createUserWithEmailAndPassword(
               email: emailController.text,
               password: passwordController.text);
+
+      final artist = Artist(
+          name: nameController.text,
+          userId: userCredential.user!.uid
+      ).toFirestore();
+
+      await FirebaseFirestore.instance.collection(CollectionNames.artists).add(artist);
+
       Future.delayed(const Duration(milliseconds: 500), () {
         setState(() {
           message = "Successful😊";
@@ -78,6 +93,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 ),
               ),
               const SizedBox(height: 50),
+              MyTextField(
+                  controller: nameController,
+                  hintText: "Name",
+                  obscureText: false),
               MyTextField(
                   controller: emailController,
                   hintText: "Email",
