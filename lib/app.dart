@@ -1,5 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:musical_application/components/audioplayer.dart';
 import 'package:musical_application/pages/home.dart';
@@ -13,15 +14,29 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   int _currentIndex = 0;
-
   late final List<Widget> tabs;
+  final AudioPlayer player = AudioPlayer();
+  final storage = FirebaseStorage.instance.ref();
+  String url = '';
 
   _AppState() {
     tabs = [
-      HomePage(),
-      const Player(url: 'https://firebasestorage.googleapis.com/v0/b/music-service-1bdb3.appspot.com/o/rubeji.mp3?alt=media&token=2ff6b286-bbfa-47d6-9156-cf1c98ffa712'),
-      //const Center(child: Text('12')),
+      HomePage(changeSong: changeSong),
+      Player(
+        url: url,
+        player: player,
+      ),
+      const Center(child: Text('12')),
     ];
+  }
+
+  void changeSong(String songName) async {
+    final mountainsRef = await storage.child(songName).getDownloadURL();
+    await player.pause();
+    await player.play(UrlSource(mountainsRef));
+    setState(() {
+      url = songName;
+    });
   }
 
   void signUserOut() {
@@ -52,6 +67,12 @@ class _AppState extends State<App> {
               icon: Icon(Icons.home),
               activeIcon: Icon(Icons.home),
               label: "Home",
+              backgroundColor: Colors.red,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.play_arrow_outlined),
+              activeIcon: Icon(Icons.play_lesson_rounded),
+              label: "Player",
               backgroundColor: Colors.red,
             ),
             BottomNavigationBarItem(

@@ -1,28 +1,43 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 class Player extends StatefulWidget {
   final String url;
-  const Player({super.key, required this.url});
+  final AudioPlayer player;
+
+  const Player({super.key, required this.url, required this.player});
 
   @override
-  State<Player> createState() => _PlayerState(url: url);
+  State<Player> createState() => _PlayerState(url: url, player: player);
 }
 
 class _PlayerState extends State<Player> {
-  _PlayerState({required this.url});
+  _PlayerState({required this.url, required this.player}) {
+    isPlaying = player.state == PlayerState.playing;
+  }
 
-  final player = AudioPlayer();
-  bool isPlaying = false;
-  Duration duration = Duration.zero;
+  final AudioPlayer player;
+  late bool isPlaying;
+  Duration duration = const Duration(hours: 2);
   Duration position = Duration.zero;
   final String url;
+  final storage = FirebaseStorage.instance.ref();
 
   void setAudio() async {
-    if (!mounted){
+    if (!mounted) {
       return;
     }
-    await player.setSourceUrl(url);
+
+    if (url.isNotEmpty) {
+      final mountainsRef = await storage.child(url).getDownloadURL();
+      await player.setSourceUrl(mountainsRef);
+      final pDuration = await player.getDuration();
+      duration = pDuration ?? const Duration(hours: 99);
+      return;
+    }
+
+    duration = const Duration(hours: 99);
     //await player.resume();
   }
 
@@ -33,7 +48,7 @@ class _PlayerState extends State<Player> {
     setAudio();
 
     player.onPlayerStateChanged.listen((event) {
-      if (!mounted){
+      if (!mounted) {
         return;
       }
       setState(() {
@@ -42,7 +57,7 @@ class _PlayerState extends State<Player> {
     });
 
     player.onDurationChanged.listen((newDuration) {
-      if (!mounted){
+      if (!mounted) {
         return;
       }
       setState(() {
@@ -51,7 +66,7 @@ class _PlayerState extends State<Player> {
     });
 
     player.onPositionChanged.listen((newPosition) {
-      if (!mounted){
+      if (!mounted) {
         return;
       }
       setState(() {
@@ -62,7 +77,7 @@ class _PlayerState extends State<Player> {
 
   @override
   void dispose() {
-    player.dispose();
+    //player.dispose();
     super.dispose();
   }
 
@@ -83,7 +98,7 @@ class _PlayerState extends State<Player> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -136,7 +151,7 @@ class _PlayerState extends State<Player> {
                 isPlaying ? Icons.pause : Icons.play_arrow,
               ),
               onPressed: () async {
-                if (isPlaying){
+                if (isPlaying) {
                   await player.pause();
                 } else {
                   await player.resume();

@@ -13,7 +13,8 @@ class DataProvider {
 
     return tracks.map((t) => TrackArtist(
         trackName: t.name,
-        artistName: artists[t.artistId]?.name ?? 'Unknown')
+        artistName: artists[t.artistId]?.name ?? 'Unknown',
+        path: t.songPath)
     ).toList();
   }
 }

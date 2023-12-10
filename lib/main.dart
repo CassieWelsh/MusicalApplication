@@ -8,5 +8,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  // final storage = FirebaseStorage.instance.ref();
+  // final mountainsRef = await storage.child('rubeji.mp3').getDownloadURL();
+  // print(mountainsRef);
   runApp(const MaterialApp(home: AuthPage()));
 }
