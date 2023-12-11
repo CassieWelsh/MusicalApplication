@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 class AddPage extends StatelessWidget {
@@ -14,11 +15,15 @@ class AddPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Center(
-            child: Text("Выберите контент, который вы хотите добавить"),
+            child: Text("Выберите трек, который хотите добавить"),
           ),
           TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("data"),
+            onPressed: () async {
+              final files = await FilePicker.platform.pickFiles(
+                  type: FileType.custom, allowedExtensions: const ['mp3']);
+              print(files!.files.single.path.toString());
+            },
+            child: const Text("123123"),
           ),
           const SizedBox(height: 100)
         ],
