@@ -32,4 +32,15 @@ class Track {
       isPublished: data["isPublished"],
     );
   }
+
+  Map<String, dynamic> toFirestore() {
+    return {
+      "id": id,
+      "artistId": artistId,
+      "name": name,
+      "genre": genre,
+      "songPath": songPath,
+      "isPublished": isPublished
+    };
+  }
 }

@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:musical_application/pages/account_page.dart';
 import 'package:musical_application/pages/player_page.dart';
 import 'package:musical_application/pages/home.dart';
-import 'package:musical_application/pages/search_page.dart';
+import 'package:musical_application/pages/add_page.dart';
 
 class App extends StatefulWidget {
   const App({super.key});
