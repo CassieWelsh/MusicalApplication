@@ -4,10 +4,11 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:musical_application/pages/account_page.dart';
-import 'package:musical_application/pages/player_page.dart';
+import 'package:musical_application/models/dto/trackartist.dart';
+import 'package:musical_application/pages/account/account_page.dart';
+import 'package:musical_application/pages/account/add_page.dart';
 import 'package:musical_application/pages/home.dart';
-import 'package:musical_application/pages/add_page.dart';
+import 'package:musical_application/pages/player_page.dart';
 
 class App extends StatefulWidget {
   const App({super.key});
@@ -18,17 +19,23 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   int _currentIndex = 0;
-  late final List<Widget> tabs;
+  late List<Widget> tabs;
   final AudioPlayer player = AudioPlayer();
   final storage = FirebaseStorage.instance.ref();
   final auth = FirebaseAuth.instance;
 
+  final meta = TrackArtist(
+    trackId: "",
+    trackName: "Неизвестен",
+    artistName: "Без названия",
+    path: "",
+    isAdded: false
+  );
+
   _AppState() {
     tabs = [
       HomePage(changeSong: changeSong),
-      PlayerPage(
-        player: player,
-      ),
+      PlayerPage(player: player, meta: meta),
       AccountPage()
     ];
   }
@@ -72,8 +79,12 @@ class _AppState extends State<App> {
     );
   }
 
-  void changeSong(String songName) async {
-    final mountainsRef = await storage.child(songName).getDownloadURL();
+  void changeSong(String songName, String artistName, String songPath) async {
+    setState(() {
+      meta.trackName = songName;
+      meta.artistName = artistName;
+    });
+    final mountainsRef = await storage.child(songPath).getDownloadURL();
     await player.play(UrlSource(mountainsRef));
   }
 
@@ -98,7 +109,9 @@ class _AppState extends State<App> {
       return AppBar(
         title: const Text("Account"),
         actions: [
-          IconButton(onPressed: addContent, icon: const Icon(Icons.add_circle_outlined)),
+          IconButton(
+              onPressed: addContent,
+              icon: const Icon(Icons.add_circle_outlined)),
           IconButton(onPressed: signUserOut, icon: const Icon(Icons.logout)),
         ],
         backgroundColor: Colors.red,

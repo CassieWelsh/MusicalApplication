@@ -9,9 +9,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:musical_application/repositories/track_repository.dart';
 
-import '../components/my_button.dart';
-import '../components/my_textfield.dart';
-import '../models/track.dart';
+import '../../components/my_button.dart';
+import '../../components/my_textfield.dart';
+import '../../models/track.dart';
 
 class AddPage extends StatefulWidget {
   const AddPage({super.key});
@@ -66,7 +66,7 @@ class _AddPageState extends State<AddPage> {
                 }),
               ),
               MyButton(
-                text: "${path?.substring(0, 18) ?? "Choose"}..",
+                text: "${file?.name.substring(0, 18) ?? "Choose"}..",
                 color: Colors.red,
                 onTap: () async {
                   final files = await FilePicker.platform.pickFiles(
@@ -74,7 +74,11 @@ class _AddPageState extends State<AddPage> {
                   setState(() {
                     final newFile = files?.files.first;
                     if (newFile != null) {
-                      path = newFile.name;
+                      if (!newFile.path!.endsWith(".mp3")){
+                        message = "Choose a file with .mp3 extension";
+                        file = null;
+                        return;
+                      }
                       file = newFile;
                     }
                   });
@@ -83,7 +87,7 @@ class _AddPageState extends State<AddPage> {
             ],
           ),
           const SizedBox(height: 10),
-          path != null
+          file != null
               ? MyButton(
                   text: "Upload",
                   color: Colors.redAccent,
@@ -93,7 +97,7 @@ class _AddPageState extends State<AddPage> {
                         name: _nameController.text,
                         artistId: auth!.uid,
                         genre: 0,
-                        songPath: path!,
+                        songPath: "",
                         isPublished: isPublic
                     );
                     setState(() {

@@ -3,7 +3,7 @@ import 'package:musical_application/data_provider.dart';
 import 'package:musical_application/models/dto/trackartist.dart';
 
 class HomePage extends StatefulWidget {
-  final void Function(String songName) changeSong;
+  final void Function(String songName, String artistName, String path) changeSong;
 
   const HomePage({super.key, required this.changeSong});
 
@@ -78,7 +78,11 @@ class _HomePageState extends State<HomePage> {
                 return ListTile(
                   title: Text(track.trackName),
                   subtitle: Text(track.artistName),
-                  onTap: () => widget.changeSong(track.path),
+                  onTap: () => widget.changeSong(
+                      track.trackName,
+                      track.artistName,
+                      track.path,
+                  ),
                 );
               },
             );

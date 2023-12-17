@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:musical_application/data_provider.dart';
+import 'package:musical_application/pages/account/account_list.dart';
+import 'package:musical_application/utils/content_types.dart';
 
 class AccountPage extends StatelessWidget {
   AccountPage({super.key});
@@ -42,12 +44,23 @@ class AccountPage extends StatelessWidget {
               tiles: [
                 ListTile(
                   title: Text("Saved music"),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            SavedPage(pageType: ContentTypes.music),
+                      ),
+                    );
+                  },
                 ),
                 ListTile(
                   title: Text("Saved playlists"),
+                  onTap: () {},
                 ),
                 ListTile(
                   title: Text("Saved albums"),
+                  onTap: () {},
                 ),
               ],
             ).toList(),

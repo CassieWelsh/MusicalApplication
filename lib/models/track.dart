@@ -5,7 +5,7 @@ class Track {
   final String artistId;
   final String name;
   final int genre;
-  final String songPath;
+  String songPath;
   final bool isPublished;
 
   Track({

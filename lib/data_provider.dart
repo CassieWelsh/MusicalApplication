@@ -1,5 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:musical_application/models/dto/trackartist.dart';
+import 'package:musical_application/models/track.dart';
 import 'package:musical_application/repositories/artist_repository.dart';
 import 'package:musical_application/repositories/track_repository.dart';
 
@@ -15,13 +15,20 @@ class DataProvider {
         .getArtistsByUserIds(tracks.map((e) => e.artistId));
 
     return tracks.map((t) => TrackArtist(
+        trackId: t.id!,
         trackName: t.name,
         artistName: artists[t.artistId]?.name ?? 'Unknown',
-        path: t.songPath)
+        path: t.songPath,
+        isAdded: false
+    )
     ).toList();
   }
 
   Future<Artist?> getCurrentArtist() {
     return _artistRepository.getCurrentArtist();
+  }
+
+  Future<List<Track>> getAccountTracks() async {
+    return await _trackRepository.getSavedTracks();
   }
 }

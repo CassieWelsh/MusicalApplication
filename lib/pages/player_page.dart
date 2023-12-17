@@ -1,22 +1,25 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:musical_application/data_provider.dart';
+import 'package:musical_application/models/dto/trackartist.dart';
 
 class PlayerPage extends StatefulWidget {
   final AudioPlayer player;
+  final TrackArtist meta;
 
-  PlayerPage({super.key, required this.player});
+  PlayerPage({super.key, required this.player, required this.meta});
 
   @override
-  State<PlayerPage> createState() => _PlayerPageState(player: player);
+  State<PlayerPage> createState() =>
+      _PlayerPageState(player: player, meta: meta);
 }
 
 class _PlayerPageState extends State<PlayerPage> {
-  _PlayerPageState({required this.player}) {
+  _PlayerPageState({required this.player, required this.meta}) {
     isPlaying = player.state == PlayerState.playing;
   }
 
+  final TrackArtist meta;
   final storage = FirebaseStorage.instance.ref();
   final AudioPlayer player;
   late bool isPlaying;
@@ -100,24 +103,29 @@ class _PlayerPageState extends State<PlayerPage> {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(20),
-            child: Image.network(
-              height: 300,
+            child: Container(
               width: 300,
-              'https://www.iso.org/files/live/sites/isoorg/files/news/News_archive/2017/08/Ref2213/Ref2213.jpg/thumbnails/300x300',
+              height: 300,
+              color: Colors.grey,
+              child: const Icon(
+                Icons.music_note,
+                size: 175,
+                color: Colors.white38,
+              ),
             ),
           ),
           const SizedBox(height: 32),
-          const Text(
-            'Неизвестен',
-            style: TextStyle(
+          Text(
+            meta.trackName,
+            style: const TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 4),
-          const Text(
-            'Без названия',
-            style: TextStyle(fontSize: 20),
+          Text(
+            meta.artistName,
+            style: const TextStyle(fontSize: 20),
           ),
           Slider(
             activeColor: Colors.red,
@@ -139,21 +147,54 @@ class _PlayerPageState extends State<PlayerPage> {
               ],
             ),
           ),
-          CircleAvatar(
-            radius: 35,
-            backgroundColor: Colors.red,
-            child: IconButton(
-              icon: Icon(
-                isPlaying ? Icons.pause : Icons.play_arrow,
+          const SizedBox(height: 25),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                radius: 35,
+                backgroundColor: Colors.red,
+                child: IconButton(
+                  icon: const Icon(Icons.skip_previous),
+                  onPressed: () {},
+                ),
               ),
-              onPressed: () async {
-                if (isPlaying) {
-                  await player.pause();
-                } else {
-                  await player.resume();
-                }
-              },
-            ),
+              const SizedBox(width: 25),
+              CircleAvatar(
+                radius: 35,
+                backgroundColor: Colors.red,
+                child: IconButton(
+                  icon: Icon(
+                    isPlaying ? Icons.pause : Icons.play_arrow,
+                  ),
+                  onPressed: () async {
+                    if (isPlaying) {
+                      await player.pause();
+                    } else {
+                      await player.resume();
+                    }
+                  },
+                ),
+              ),
+              const SizedBox(width: 25),
+              CircleAvatar(
+                radius: 35,
+                backgroundColor: Colors.red,
+                child: IconButton(
+                  icon: const Icon(Icons.skip_next),
+                  onPressed: () {},
+                ),
+              ),
+              const SizedBox(width: 25),
+              CircleAvatar(
+                radius: 28,
+                backgroundColor: Colors.red,
+                child: IconButton(
+                  icon: Icon(meta.isAdded ? Icons.remove : Icons.add),
+                  onPressed: () {},
+                ),
+              ),
+            ],
           ),
         ],
       ),
