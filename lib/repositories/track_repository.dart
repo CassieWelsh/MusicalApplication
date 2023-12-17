@@ -41,15 +41,37 @@ class TrackRepository {
         .get();
 
     final trackIds = snapshot.docs.map((t) => t["trackId"]).toList();
-    if (trackIds.isEmpty){
+    if (trackIds.isEmpty) {
       return const [];
     }
 
     final tracks = await _tracksColl
-        .where("trackId", whereIn: trackIds)
+        .where(FieldPath.documentId, whereIn: trackIds)
         .limit(25)
         .get();
+    final result = tracks.docs.map((e) => Track.fromSnapshot(e)).toList();
 
-    return tracks.docs.map((e) => Track.fromSnapshot(e)).toList();
+    return result;
+  }
+
+  Future removeSaved(String trackId) async {
+    final artistTrack = (await _artistTracksColl
+        .where("trackId", isEqualTo: trackId)
+        .where("artistId", isEqualTo: userId)
+        .get());
+    if (artistTrack.size > 0) {
+      await _artistTracksColl.doc(artistTrack.docs.first.id).delete();
+    }
+  }
+
+  Future addSaved(String trackId) async {
+    final artistTrack = (await _artistTracksColl
+        .where("trackId", isEqualTo: trackId)
+        .where("artistId", isEqualTo: userId)
+        .get());
+    if (artistTrack.size <= 0) {
+      await _artistTracksColl.add(
+          {"trackId": trackId, "artistId": userId, "addDate": DateTime.now()});
+    }
   }
 }

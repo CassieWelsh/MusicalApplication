@@ -1,6 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:musical_application/data_provider.dart';
 import 'package:musical_application/models/dto/trackartist.dart';
 
 class PlayerPage extends StatefulWidget {
@@ -19,8 +20,8 @@ class _PlayerPageState extends State<PlayerPage> {
     isPlaying = player.state == PlayerState.playing;
   }
 
+  final _dataProvider = DataProvider();
   final TrackArtist meta;
-  final storage = FirebaseStorage.instance.ref();
   final AudioPlayer player;
   late bool isPlaying;
   static Duration duration = const Duration(hours: 2);
@@ -92,6 +93,10 @@ class _PlayerPageState extends State<PlayerPage> {
       minutes,
       seconds,
     ].join(':');
+  }
+
+  void addSong(){
+    _dataProvider.addOrRemoveSong(meta.trackId, meta.isAdded);
   }
 
   @override
@@ -191,7 +196,12 @@ class _PlayerPageState extends State<PlayerPage> {
                 backgroundColor: Colors.red,
                 child: IconButton(
                   icon: Icon(meta.isAdded ? Icons.remove : Icons.add),
-                  onPressed: () {},
+                  onPressed: () {
+                    addSong();
+                    setState(() {
+                      meta.isAdded = !meta.isAdded;
+                    });
+                  },
                 ),
               ),
             ],

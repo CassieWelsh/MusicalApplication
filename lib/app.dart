@@ -25,12 +25,11 @@ class _AppState extends State<App> {
   final auth = FirebaseAuth.instance;
 
   final meta = TrackArtist(
-    trackId: "",
-    trackName: "Неизвестен",
-    artistName: "Без названия",
-    path: "",
-    isAdded: false
-  );
+      trackId: "",
+      trackName: "Неизвестен",
+      artistName: "Без названия",
+      path: "",
+      isAdded: false);
 
   _AppState() {
     tabs = [
@@ -79,8 +78,11 @@ class _AppState extends State<App> {
     );
   }
 
-  void changeSong(String songName, String artistName, String songPath) async {
+  void changeSong(String trackId, String songName, String artistName,
+      bool isAdded, String songPath) async {
     setState(() {
+      meta.isAdded = isAdded;
+      meta.trackId = trackId;
       meta.trackName = songName;
       meta.artistName = artistName;
     });
