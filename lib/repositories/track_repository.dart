@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:musical_application/utils/collection_names.dart';
 
+import '../models/playlist.dart';
 import '../models/track.dart';
 
 class TrackRepository {
@@ -13,9 +14,42 @@ class TrackRepository {
       FirebaseFirestore.instance.collection(CollectionNames.artistTracks);
   final _tracksColl =
       FirebaseFirestore.instance.collection(CollectionNames.tracks);
+
+  final _playlistsColl =
+      FirebaseFirestore.instance.collection(CollectionNames.playlists);
+  final _playlistTracksColl =
+      FirebaseFirestore.instance.collection(CollectionNames.playlistTracks);
+  final _artistPlaylistsColl =
+      FirebaseFirestore.instance.collection(CollectionNames.artistPlaylists);
+
   final _artistsColl =
       FirebaseFirestore.instance.collection(CollectionNames.tracks);
   final userId = FirebaseAuth.instance.currentUser?.uid;
+
+  Future<List<Playlist>> getSavedPlaylists() async {
+    final playlists =
+        await _artistPlaylistsColl.where("artistId", isEqualTo: userId).get();
+
+    final artistPlaylists = await _playlistsColl
+        .where(FieldPath.documentId,
+            whereIn: playlists.docs.map((p) => p["playlistId"]).toList())
+        .get();
+
+    return artistPlaylists.docs.map((e) => Playlist.fromSnapshot(e)).toList();
+  }
+
+  Future<List<Track>> getPlaylistTracks(String playlistId) async {
+    final trackIds = await _playlistTracksColl
+        .where("playlistId", isEqualTo: playlistId)
+        .get();
+
+    final tracks = await _tracksColl
+        .where(FieldPath.documentId,
+            whereIn: trackIds.docs.map((t) => t["trackId"]).toList())
+        .get();
+
+    return tracks.docs.map((t) => Track.fromSnapshot(t)).toList();
+  }
 
   Future<List<Track>> getTracks() async {
     final snapshot =

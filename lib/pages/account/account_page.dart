@@ -4,7 +4,10 @@ import 'package:musical_application/pages/account/account_list.dart';
 import 'package:musical_application/utils/content_types.dart';
 
 class AccountPage extends StatelessWidget {
-  AccountPage({super.key});
+  final void Function(String trackId, String songName, String artistName,
+      bool isAdded, String path) changeSong;
+
+  AccountPage({super.key, required this.changeSong});
 
   final _dataProvider = DataProvider();
 
@@ -48,15 +51,25 @@ class AccountPage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            SavedPage(pageType: ContentTypes.music),
+                        builder: (context) => SavedPage(
+                            changeSong: changeSong,
+                            pageType: ContentTypes.music),
                       ),
                     );
                   },
                 ),
                 ListTile(
                   title: Text("Saved playlists"),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SavedPage(
+                            changeSong: changeSong,
+                            pageType: ContentTypes.playlist),
+                      ),
+                    );
+                  },
                 ),
                 ListTile(
                   title: Text("Saved albums"),

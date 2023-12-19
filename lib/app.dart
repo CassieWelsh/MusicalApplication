@@ -35,7 +35,7 @@ class _AppState extends State<App> {
     tabs = [
       HomePage(changeSong: changeSong),
       PlayerPage(player: player, meta: meta),
-      AccountPage()
+      AccountPage(changeSong: changeSong)
     ];
   }
 

@@ -122,7 +122,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 color: Colors.green,
                 onTap: () => Navigator.pop(context),
               ),
-              const SizedBox(height: 100),
             ],
           ),
         ),
