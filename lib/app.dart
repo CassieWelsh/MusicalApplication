@@ -91,6 +91,7 @@ class _AppState extends State<App> {
   }
 
   void signUserOut() {
+    player.stop();
     FirebaseAuth.instance.signOut();
   }
 

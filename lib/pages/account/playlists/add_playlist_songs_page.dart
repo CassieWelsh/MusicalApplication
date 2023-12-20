@@ -110,7 +110,7 @@ class _SongsPageState extends State<SongsPage> {
               text: "Add selected",
               color: Colors.red,
               onTap: () async {
-                await _dataProvider.updatePlaylist(widget.playlistId, values);
+                await _dataProvider.updatePlaylistTracks(widget.playlistId, values);
                 Navigator.of(context).popUntil((p) => p.isFirst);
               }
             ),

@@ -91,8 +91,20 @@ class DataProvider {
         .toList();
   }
 
-  Future updatePlaylist(String playlistId, Map<String, bool> values) {
+  Future updatePlaylistTracks(String playlistId, Map<String, bool> values) {
     values.removeWhere((key, value) => !value);
-    return _trackRepository.updatePlaylist(playlistId, values.keys);
+    return _trackRepository.updatePlaylistTracks(playlistId, values.keys);
+  }
+
+  Future<List<Playlist>> getPlaylists() {
+    return _trackRepository.getPlaylists();
+  }
+
+  Future updatePlaylist(String playlistId, String name, String description, bool isPublic) {
+    return _trackRepository.updatePlaylist(playlistId, name, description, isPublic);
+  }
+
+  Future removePlaylist(String playlistId) {
+    return _trackRepository.removePlaylist(playlistId);
   }
 }

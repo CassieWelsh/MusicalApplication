@@ -3,9 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Playlist {
     final String? id;
     final String artistId;
-    final String name;
-    final String description;
-    final bool isPublic;
+    String name;
+    String description;
+    bool isPublic;
     final bool isAlbum;
 
     Playlist({

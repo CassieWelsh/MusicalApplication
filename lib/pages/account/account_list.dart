@@ -119,8 +119,11 @@ class _SavedPageState extends State<SavedPage> {
                         MaterialPageRoute(
                           builder: (context) => PlaylistPage(
                             playlistId: playlist.id!,
+                            artistId: playlist.artistId,
                             name: playlist.name,
                             description: playlist.description,
+                            isPublic: playlist.isPublic,
+                            changeSong: widget.changeSong,
                           ),
                         ),
                       )

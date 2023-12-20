@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:musical_application/data_provider.dart';
 import 'package:musical_application/models/dto/trackartist.dart';
+import 'package:musical_application/pages/account/playlists/playlist_page.dart';
+
+import '../models/playlist.dart';
 
 class HomePage extends StatefulWidget {
   final void Function(String trackId, String songName, String artistName,
@@ -31,7 +34,10 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Colors.white,
           selectedIndex: _currentIndex,
           onDestinationSelected: (index) {
-            data = _dataProvider.getMainPageTracks();
+            if (index == 3)
+              data = _dataProvider.getPlaylists();
+            else
+              data = _dataProvider.getMainPageTracks();
             setState(() {
               _currentIndex = index;
             });
@@ -56,7 +62,9 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
         FutureBuilder(
-          future: data, //_dataProvider.getMainPageTracks(),
+          future: _currentIndex == 2
+              ? _dataProvider.getPlaylists()
+              : _dataProvider.getMainPageTracks(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
@@ -69,7 +77,35 @@ class _HomePageState extends State<HomePage> {
               );
             }
 
-            var tracks = snapshot.data as List<TrackArtist>;
+            if (_currentIndex == 2) {
+              final playlists = snapshot.data as List<Playlist>;
+              return ListView.builder(
+                itemCount: playlists.length,
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemBuilder: (context, ind) {
+                  var playlist = playlists[ind];
+                  return ListTile(
+                    title: Text(playlist.name),
+                    subtitle: Text(!playlist.isAlbum ? "Playlist" : "Album"),
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (b) => PlaylistPage(
+                            name: playlist.name,
+                            playlistId: playlist.id!,
+                            description: playlist.description,
+                            isPublic: playlist.isPublic,
+                            artistId: playlist.artistId,
+                            changeSong: widget.changeSong
+                          ),
+                        )),
+                  );
+                },
+              );
+            }
+
+            final tracks = snapshot.data as List<TrackArtist>;
             return ListView.builder(
               itemCount: tracks.length,
               scrollDirection: Axis.vertical,
