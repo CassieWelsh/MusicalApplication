@@ -13,14 +13,14 @@ import '../../components/my_button.dart';
 import '../../components/my_textfield.dart';
 import '../../models/track.dart';
 
-class AddPage extends StatefulWidget {
-  const AddPage({super.key});
+class AddSongPage extends StatefulWidget {
+  const AddSongPage({super.key});
 
   @override
-  State<AddPage> createState() => _AddPageState();
+  State<AddSongPage> createState() => _AddSongPageState();
 }
 
-class _AddPageState extends State<AddPage> {
+class _AddSongPageState extends State<AddSongPage> {
   String? path;
   PlatformFile? file;
   String message = "Upload a track";

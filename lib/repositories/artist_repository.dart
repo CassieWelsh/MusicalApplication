@@ -24,6 +24,10 @@ class ArtistRepository {
   }
 
   Future<Map<String, Artist>> getArtistsByUserIds(Iterable<String> userIds) async {
+    if (userIds.isEmpty) {
+      return <String, Artist>{};
+    }
+
     final snapshot = await _artistsColl.where("userId", whereIn: userIds).get();
     return Map<String, Artist>.fromIterable(
         snapshot.docs.map<Artist>((e) => Artist.fromSnapshot(e)),

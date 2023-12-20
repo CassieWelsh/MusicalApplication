@@ -26,6 +26,19 @@ class TrackRepository {
       FirebaseFirestore.instance.collection(CollectionNames.tracks);
   final userId = FirebaseAuth.instance.currentUser?.uid;
 
+  Future addPlaylist(String name, String description, bool isPublic) async {
+    final playlist = Playlist(
+        artistId: userId!,
+        name: name,
+        description: description,
+        isPublic: isPublic,
+        isAlbum: false);
+
+    final playlistDoc = await _playlistsColl.add(playlist.toFirestore());
+    await _artistPlaylistsColl
+        .add({"playlistId": playlistDoc.id, "artistId": userId, "playlistType": 0});
+  }
+
   Future<List<Playlist>> getSavedPlaylists() async {
     final playlists =
         await _artistPlaylistsColl.where("artistId", isEqualTo: userId).get();
@@ -43,6 +56,10 @@ class TrackRepository {
         .where("playlistId", isEqualTo: playlistId)
         .get();
 
+    if (trackIds.size <= 0){
+      return <Track>[];
+    }
+
     final tracks = await _tracksColl
         .where(FieldPath.documentId,
             whereIn: trackIds.docs.map((t) => t["trackId"]).toList())
@@ -55,7 +72,9 @@ class TrackRepository {
     final snapshot =
         await _tracksColl.where("isPublished", isEqualTo: true).limit(25).get();
 
-    return snapshot.docs.map((e) => Track.fromSnapshot(e)).toList();
+    return snapshot.docs.length > 0
+           ? snapshot.docs.map((e) => Track.fromSnapshot(e)).toList()
+           : <Track>[];
   }
 
   Future uploadTrack(Track track, PlatformFile file) async {
@@ -106,6 +125,20 @@ class TrackRepository {
     if (artistTrack.size <= 0) {
       await _artistTracksColl.add(
           {"trackId": trackId, "artistId": userId, "addDate": DateTime.now()});
+    }
+  }
+
+  Future updatePlaylist(String playlistId, Iterable<String> values) async {
+    final tracks = await _playlistTracksColl.where("playlistId", isEqualTo: playlistId).get();
+    for (DocumentSnapshot doc in tracks.docs) {
+      await doc.reference.delete();
+    }
+
+    for (final v in values) {
+      await _playlistTracksColl.add({
+        "playlistId": playlistId,
+        "trackId": v
+      });
     }
   }
 }

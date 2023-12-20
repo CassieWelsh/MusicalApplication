@@ -1,14 +1,23 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:musical_application/data_provider.dart';
+import 'package:musical_application/pages/account/playlists/add_playlist_songs_page.dart';
 
+import '../../../components/my_button.dart';
 import '../../../models/dto/trackartist.dart';
 
 class PlaylistPage extends StatefulWidget {
   final String playlistId;
   final String name;
+  final String description;
   final _dataProvider = DataProvider();
 
-  PlaylistPage({super.key, required this.name, required this.playlistId});
+  PlaylistPage(
+      {super.key,
+      required this.name,
+      required this.playlistId,
+      required this.description});
 
   @override
   State<PlaylistPage> createState() => _PlaylistPageState();
@@ -41,11 +50,35 @@ class _PlaylistPageState extends State<PlaylistPage> {
             ),
           ),
           const SizedBox(height: 10),
+          const SizedBox(height: 20),
           Text(widget.name),
-          const SizedBox(height: 25),
+          const SizedBox(height: 20),
+          widget.description.isNotEmpty
+              ? Text(widget.description)
+              : Container(),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: 250,
+            height: 65,
+            child: MyButton(
+              text: "Add tracks",
+              color: Colors.red,
+              onTap: () async {
+                final trackIds = await widget._dataProvider
+                    .getPlaylistTracks(widget.playlistId);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => SongsPage(
+                          playlistId: widget.playlistId,
+                          trackIds: trackIds.map((t) => t.trackId).toList())),
+                );
+              },
+            ),
+          ),
           const Divider(color: Colors.red),
           FutureBuilder(
-              future: widget._dataProvider.getPlaylistTracks(widget.playlistId),
+            future: widget._dataProvider.getPlaylistTracks(widget.playlistId),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(

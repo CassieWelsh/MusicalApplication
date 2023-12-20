@@ -6,7 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:musical_application/models/dto/trackartist.dart';
 import 'package:musical_application/pages/account/account_page.dart';
-import 'package:musical_application/pages/account/add_page.dart';
+import 'package:musical_application/pages/account/add_song_page.dart';
 import 'package:musical_application/pages/home.dart';
 import 'package:musical_application/pages/player_page.dart';
 
@@ -125,7 +125,7 @@ class _AppState extends State<App> {
   void addContent() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const AddPage()),
+      MaterialPageRoute(builder: (context) => const AddSongPage()),
     );
   }
 }

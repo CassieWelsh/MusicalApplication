@@ -35,11 +35,11 @@ class Playlist {
 
     Map<String, dynamic> toFirestore() {
       return {
-        "id": id,
         "artistId": artistId,
         "name": name,
         "description": description,
         "isAlbum": isAlbum,
+        "isPublic": isPublic,
       };
     }
 }

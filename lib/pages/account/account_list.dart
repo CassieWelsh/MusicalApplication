@@ -76,10 +76,13 @@ class _SavedPageState extends State<SavedPage> {
             actions: [
               IconButton(
                 icon: const Icon(Icons.add_circle_outlined),
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => CreatePlaylistPage()),
-                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CreatePlaylistPage()),
+                  );
+                },
               ),
             ],
           ),
@@ -117,6 +120,7 @@ class _SavedPageState extends State<SavedPage> {
                           builder: (context) => PlaylistPage(
                             playlistId: playlist.id!,
                             name: playlist.name,
+                            description: playlist.description,
                           ),
                         ),
                       )

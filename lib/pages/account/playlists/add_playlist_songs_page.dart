@@ -1,3 +1,5 @@
+// ignore_for_file: curly_braces_in_flow_control_structures
+
 import 'package:flutter/material.dart';
 import 'package:musical_application/data_provider.dart';
 
@@ -5,7 +7,12 @@ import '../../../components/my_button.dart';
 import '../../../models/dto/trackartist.dart';
 
 class SongsPage extends StatefulWidget {
-  const SongsPage({super.key});
+  final String playlistId;
+
+  final Iterable<String> trackIds;
+
+  const SongsPage(
+      {super.key, required this.playlistId, required this.trackIds});
 
   @override
   State<SongsPage> createState() => _SongsPageState();
@@ -13,7 +20,10 @@ class SongsPage extends StatefulWidget {
 
 class _SongsPageState extends State<SongsPage> {
   final _dataProvider = DataProvider();
-  late final future = _dataProvider.getMainPageTracks();
+  late Future future = _dataProvider.getMainPageTracks();
+  Map<String, bool> values = <String, bool>{};
+
+  final _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -33,12 +43,22 @@ class _SongsPageState extends State<SongsPage> {
               SizedBox(
                 width: 250,
                 child: TextField(
-                  onChanged: (a) => {print(a)},
+                  controller: _searchController,
+                  onChanged: (a) {
+                    if (_searchController.text.isNotEmpty)
+                      setState(() {
+                        future = _dataProvider
+                            .getMainPageTracksBySearch(_searchController.text);
+                      });
+                    else
+                      setState(() {
+                        future = _dataProvider.getMainPageTracks();
+                      });
+                  },
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
           FutureBuilder(
             future: future,
             builder: (context, snapshot) {
@@ -53,22 +73,29 @@ class _SongsPageState extends State<SongsPage> {
                 );
               }
 
-              var tracks = snapshot.data as List<TrackArtist>;
+              final tracks = snapshot.data as List<TrackArtist>;
               return ListView.builder(
                 itemCount: tracks.length,
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
                 itemBuilder: (context, ind) {
-                  bool status = false;
-                  var track = tracks[ind];
+                  final track = tracks[ind];
+                  if (!values.containsKey(track.trackId) &&
+                      widget.trackIds.any((t) => t == track.trackId))
+                    values[track.trackId] = true;
+
+                  if (!values.containsKey(track.trackId))
+                    values[track.trackId] = false;
+
                   return CheckboxListTile(
                     title: Text(track.trackName),
                     subtitle: Text(track.artistName),
-                    value: status,
-
+                    value: values[track.trackId],
                     onChanged: (bool? value) {
                       setState(() {
-                        status = !status;
+                        if (value != null) {
+                          values[track.trackId] = value;
+                        }
                       });
                     },
                     //onTap: () => {},
@@ -77,17 +104,16 @@ class _SongsPageState extends State<SongsPage> {
               );
             },
           ),
-          const SizedBox(height: 12),
-          MyButton(
-            text: "Add selected",
-            color: Colors.red,
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SongsPage(),
-                  ));
-            },
+          SizedBox(
+            height: 65,
+            child: MyButton(
+              text: "Add selected",
+              color: Colors.red,
+              onTap: () async {
+                await _dataProvider.updatePlaylist(widget.playlistId, values);
+                Navigator.of(context).popUntil((p) => p.isFirst);
+              }
+            ),
           ),
         ],
       ),
